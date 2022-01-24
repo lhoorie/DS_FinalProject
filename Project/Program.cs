@@ -5,117 +5,125 @@ using System.IO;
 using System.Linq;
 
 namespace DS_Final_Project
-{
-    //Diseases => Data set disease
-    //Disease effect => data set alergies
-    struct DiseaseEffect
+{ 
+    public class DiseaseEffect
     {
         string name;
-        bool isGood;
-
+        bool IsPositive;
         public DiseaseEffect(string name, bool isGood)
         {
             this.name = name;
-            this.isGood = isGood;
+            this.IsPositive = isGood;
         }
 
-        public string Name { get => name; set => name = value; }
-        public bool IsGood { get => isGood; set => isGood = value; }
+        public string Name
+        {
+            get => name;
+            set => name = value;
+        }
+        public bool IsPositiveFunc { get => IsPositive; set => IsPositive = value; }
 
         public override string ToString()
         {
-            return string.Format("Drug : {0}", name);
+            return string.Format("Drug : " + name);
         }
     }
     class Disease 
     {
-        // fields
         string name;
         List<DiseaseEffect> effects;
-
-        // getter setter
-        public string Name { get => name; set => name = value; }
         public List<DiseaseEffect> Effects { get => effects; }
-
+        public string Name
+        {
+            get => name;
+            set => name = value;
+        }
         public Disease(string name)
         {
             this.name = name;
             effects = new List<DiseaseEffect>();
         }
-
-        // functions
-        public void addEffect(DiseaseEffect effect) => effects.Add(effect);
+        public void addEffect(DiseaseEffect e)
+        {
+            effects.Add(e);
+        }
         public void deleteEffect(string name)
         {
             effects = effects.Where(x => x.Name != name).ToList();
         }
         public override string ToString()
         {
-            string temp = string.Format("Dis_{0} : ", name);
+            string aux = string.Format("Dis_" + name + " : ");
             foreach (var x in effects)
-                temp += string.Format("(Drug_{0},{1}) ; ", x.Name, x.IsGood ? "+" : "-");
-            return temp.Substring(0, temp.Length - 3);
+            {
+                aux += string.Format("(Drug_{0},{1}) ; ", x.Name, x.IsPositiveFunc ? "+" : "-");
+            }
+            return aux.Substring(0, aux.Length - 3);
         }
 
         public List<bool> drugHasEffect(string name)
         {
-            List<bool> temp = new List<bool>();
-            temp.Add(false);
+            List<bool> aux = new List<bool>();
+            aux.Add(false);
             var eff = effects.Where(x => x.Name == name).ToArray();
             if (eff.Length != 0)
             {
-                temp[0] = true;
-                temp.Add(eff.First().IsGood);
+                aux[0] = true;
+                aux.Add(eff.First().IsPositiveFunc);
             }
-
-            return temp;
+            return aux;
             //[0] = drug effect on disease (if tru the -> [1] : positive or negative effect)
         }
     }
 
-    //Drugs => Data set effects
-
-    struct DrugEffect
+    public class DrugEffect
     {
-        string drug, eff;
+        string drug, DrgEffect;
 
-        public DrugEffect(string drug, string eff)
+        public DrugEffect(string drug, string e)
         {
             this.drug = drug;
-            this.eff = eff;
+            this.DrgEffect = e;
         }
 
-        public string Drug { get => drug; set => drug = value; }
-        public string Eff { get => eff; set => eff = value; }
+        public string Drug
+        {
+            get => drug;
+            set => drug = value;
+        }
+        public string Eff
+        { 
+            get => DrgEffect;
+            set => DrgEffect = value;
+        }
 
         public override string ToString()
         {
-            return string.Format("Drug : {0}, Effect : {1}", drug, eff);
+            return string.Format("Drug : {0}, Effect : {1}", drug, DrgEffect);
         }
     }
     class Drug
     {
-        // fields
         string name;
         float price;
         List<DrugEffect> effects = new List<DrugEffect>();
-
-        // getter setter
         public string Name { get => name; set => name = value; }
         public float Price { get => price; set => price = value; }
         //drugs that have effects on this specific drug
-        public List<DrugEffect> Effects { get => effects; }
-
-        // constructor
+        public List<DrugEffect> Effects
+        {
+            get => effects;
+        }
         public Drug(string name, float price)
         {
             this.price = price;
             this.name = name;
             effects = new List<DrugEffect>();
         }
-
-        // functions
-        public void addEffect(DrugEffect effect) => effects.Add(effect);
+        public void addEffect(DrugEffect effect)
+        {
+            effects.Add(effect);
+        }
         public void deleteEffect(string name)
         {
             effects = effects.Where(x => x.Drug != name).ToList();
@@ -123,20 +131,21 @@ namespace DS_Final_Project
 
         public override string ToString()
         {
-            string temp = string.Format("Drug_{0} : ", name);
+            string aux = string.Format("Drug_" + name + " : ");
             foreach (var x in effects)
-                temp += string.Format("(Drug_{0},Eff_{1}) ; ", x.Drug, x.Eff);
-            return temp.Substring(0, temp.Length - 3);
+            {
+                aux += string.Format("(Drug_{0},Eff_{1}) ; ", x.Drug, x.Eff);
+            }
+            return aux.Substring(0, aux.Length - 3);
         }
     }
 
-    //UI
-    class UI
+    class cnsl
     {
-        static private ConsoleColor mainConsoleBackgroundColor = ConsoleColor.DarkCyan;
-        static private ConsoleColor mainConsoleForegroundColor = ConsoleColor.DarkMagenta;
-        static private string DashedLine = "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-";
-        static private string PointerLine = "=>";
+        static private ConsoleColor mainConsoleBackgroundColor = ConsoleColor.Black;
+        static private ConsoleColor mainConsoleForegroundColor = ConsoleColor.DarkRed;
+        static private string DashedLine = "----";
+        static private string PointerLine = ">>>";
         static public ConsoleColor MainConsoleBackgroundColor { get => mainConsoleBackgroundColor; set => mainConsoleBackgroundColor = value; }
         static public ConsoleColor MainConsoleForegroundColor { get => mainConsoleForegroundColor; set => mainConsoleForegroundColor = value; }
         static public void Initialize()
@@ -159,12 +168,12 @@ namespace DS_Final_Project
         static public void WriteError(string Massage)
         {
             Console.BackgroundColor = ConsoleColor.Red;
-            Console.WriteLine(PointerLine + " ERROR | " + Massage);
+            Console.WriteLine(PointerLine + " <ERROR>" + Massage);
             ResetColor();
         }
         static public void WriteLine(string Massage)
         {
-            Console.WriteLine(PointerLine + " " + Massage);
+            Console.WriteLine(PointerLine + Massage);
             ResetColor();
         }
         static public void Write(string Massage)
@@ -174,23 +183,23 @@ namespace DS_Final_Project
         }
         static public void WriteTitle(string Massage)
         {
-            Console.BackgroundColor = ConsoleColor.Cyan;
+            Console.BackgroundColor = ConsoleColor.White;
             Console.WriteLine(DashedLine + " " + Massage + " " + DashedLine);
             ResetColor();
         }
         static public void WriteLog(string Massage)
         {
-            Console.BackgroundColor = ConsoleColor.Yellow;
-            Console.ForegroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(Massage);
             ResetColor();
         }
         static public void WriteSubTitle(string Massage)
         {
-            Console.BackgroundColor = ConsoleColor.DarkGreen;
+            Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.Black;
 
-            Console.WriteLine(PointerLine + " " + Massage);
+            Console.WriteLine(PointerLine + Massage);
             ResetColor();
         }
         static public void PrintErrorLine(int kind = 1)
@@ -217,7 +226,7 @@ namespace DS_Final_Project
         static public string ReadLine()
         {
             string Massage;
-            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.BackgroundColor = ConsoleColor.White;
             Massage = Console.ReadLine();
             ResetColor();
             return Massage;
@@ -237,50 +246,48 @@ namespace DS_Final_Project
     partial class Program
     {
         //Files
-        static string dataPath = "../../../DATA/DataSets/";
+        static string pathURL = "../../../DATA/DataSets/";
         static string alergies = "alergies.txt";
         static string diseases = "diseases.txt";
         static string drugs = "drugs.txt";
         static string effects = "effects.txt";
 
-        //error handler
         static string error = "";
 
-        // read ? (don't read files again)
+        // Don't read files again
         static bool isRead = false;
 
         // total time
         static double time = 0;
 
-        //initial function
+        //init function
         static void initiat()
         {
-            Console.Title = "DS Final Project App";
-            UI.Initialize();
-            for (int i = 0; i < hashSize; i++)
+            Console.Title = "DSFinalProject";
+            cnsl.Initialize();
+            for (int i = 0; i < size; i++)
             {
                 Drugs[i] = new List<Drug>();
                 Diseases[i] = new List<Disease>();
             }
         }
-        // hash size (an array with 100 lists and then add drugs and diseases to this list)
-        static int hashSize = 100;
 
-        // lists
-        static List<Drug>[] Drugs = new List<Drug>[hashSize];
-        static List<Disease>[] Diseases = new List<Disease>[hashSize];
+        static int size = 100;
 
-        // hashing index  (get a name and convert it to hash mode(0-99) and add it to Drugs)
-        static int getIndex(string name) => name.ToCharArray().Sum(x => x) % hashSize;
+        static List<Drug>[] Drugs = new List<Drug>[size];
+        static List<Disease>[] Diseases = new List<Disease>[size];
 
-        // search in lists
+        // Put into Hashtable
+        static int getIndex(string name) => name.ToCharArray().Sum(x => x) % size;
+
+        // Search In Lists
         static Disease getDisease(ref List<Disease> list, string name) //=> remove first input 
         {
             //var list = Diseases[getIndex(name)];
             foreach (var x in list)
                 if (x.Name == name)
                     return x;
-            throw new Exception("No such a disease !");
+            throw new Exception("No such a disease!");
         }
         static Drug getDrug(ref List<Drug> list, string name) //=> remove first input 
         {
@@ -288,7 +295,7 @@ namespace DS_Final_Project
             foreach (var x in list)
                 if (x.Name == name)
                     return x;
-            throw new Exception("No such a drug !");
+            throw new Exception("No such a drug!");
         }
         static void removeDisease(ref List<Disease> list, string name) //=> remove first input 
         {
@@ -313,23 +320,21 @@ namespace DS_Final_Project
             var drugs = list[index].Effects.Select(x => x.Drug);
             foreach (var drug in drugs)
                 getDrug(ref Drugs[getIndex(drug)], drug).deleteEffect(name);
-            for (int listIndex = 0; listIndex < hashSize; listIndex++)
+            for (int listIndex = 0; listIndex < size; listIndex++)
                 for (int disease = 0; disease < Diseases[listIndex].Count; disease++)
                     Diseases[listIndex][disease].deleteEffect(name);
             list.RemoveAt(index);
         }
-        //define some enum
+        //Enum
         enum commands
         {
-            Start_reading = 1,
-            Check_if_there_is_a_drug_interactions_in_a_drug_prescription,
-            Check_if_there_is_a_medical_allergy_in_clients_drug_prescription,
-            Calculate_total_price,
-            Change_price_of_drugs,
-            Add_or_delete_drug_and_disease,
-            Search_in_drugs_or_diseases,
-            Print_sizes,
-
+            startToRead = 1,
+            checkDrugsIntraction,
+            checkAllergyInDrugs,
+            TotalPrice,
+            changePriceOfDrug,
+            AddOrDeleteADrugAndDisease,
+            searchInDrugsOrDiseases,
             Exit = 9
         }
 
@@ -357,13 +362,13 @@ namespace DS_Final_Project
         }
 
         // to print an enum and get one
-        static T pagEnum<T>(string message = "What do you want to do ?") where T : Enum
+        static T pagEnum<T>(string message = "Orders") where T : Enum
         {
             T temp = default;
 
             while (true)
             {
-                UI.Clear();
+                cnsl.Clear();
                 printError();
                 try
                 {
@@ -373,7 +378,7 @@ namespace DS_Final_Project
                 }
                 catch (ArgumentException)
                 {
-                    error += " * Enter correct command !!";
+                    error += "Enter correct command !!";
                 }
                 catch (Exception e)
                 {
@@ -387,10 +392,10 @@ namespace DS_Final_Project
         {
             int counter = 1;
 
-            UI.WriteTitle(message);
+            cnsl.WriteTitle(message);
             foreach (T temp in Enum.GetValues(typeof(T)))
             {
-                if (temp.ToString() == "Print_sizes")
+                if (temp.ToString() == "Print_Sizes")
                     continue;
 
                 if (temp.ToString() == "Back" || temp.ToString() == "Exit")
@@ -399,7 +404,7 @@ namespace DS_Final_Project
                     counter = 9;
                 }
 
-                UI.WriteSubTitle(String.Format(" {0} - {1}", counter, temp));
+                cnsl.WriteSubTitle(String.Format(" {0} - {1}", counter, temp));
                 counter++;
             }
 
@@ -408,10 +413,10 @@ namespace DS_Final_Project
         //to get an enum from user
         static T GetEnum<T>()
         {
-            Console.Write("\n-> Enter Name or it's Number : ");
+            Console.Write("\nEnter Name or its Number : ");
             string tempStr = Console.ReadLine().ToLower();
             if (String.IsNullOrEmpty(tempStr))
-                throw new Exception(" * Enter number or word correctly !!");
+                throw new Exception("Enter number or word correctly !!");
             int tempInt = 0;
             bool isUsingInt = true;
             try
@@ -423,7 +428,7 @@ namespace DS_Final_Project
                 if (Enum.IsDefined(typeof(T), tempInt))
                     tempStr = Enum.GetName(typeof(T), tempInt);
                 else
-                    throw new Exception(" * Number is out of Range !!");
+                    throw new Exception(" Out of range!");
             return (T)Enum.Parse(typeof(T), tempStr, true);
         }
 
@@ -432,18 +437,18 @@ namespace DS_Final_Project
         {
             if (!String.IsNullOrEmpty(error))
             {
-                UI.PrintErrorLine();
-                UI.WriteError(string.Format("{0,-50}", error));
+                cnsl.PrintErrorLine();
+                cnsl.WriteError(string.Format("{0,-50}", error));
                 error = "";
-                UI.PrintErrorLine();
+                cnsl.PrintErrorLine();
             }
         }
-        //does'nt have underlines
+        //doesn't have underlines
         static void notFoundError()
         {
             if (!String.IsNullOrEmpty(error))
             {
-                UI.WriteError(error);
+                cnsl.WriteError(error);
                 error = "";
             }
         }
@@ -451,7 +456,7 @@ namespace DS_Final_Project
         //to create a wait and remain previous orders
         static void wait()
         {
-            Console.Write("Press \"Enter\" or anything else to continue ... ");
+            Console.Write("Press Enter or anything else to continue ... ");
             Console.ReadKey();
         }
 
@@ -486,17 +491,17 @@ namespace DS_Final_Project
         {
             using (StreamReader file = new StreamReader(path))
             {
-                string ln;
-                double tempTime;
+                string line;
+                double auxTime;
                 Stopwatch stopwatch = new Stopwatch();
 
                 switch (fileKind)
                 {
                     case files.alergies:
                         stopwatch.Start();
-                        while ((ln = file.ReadLine()) != null)
+                        while ((line = file.ReadLine()) != null)
                         {
-                            string[] temp = ln.Split(' ', ':', ';').Where(z => !String.IsNullOrWhiteSpace(z)).ToArray();
+                            string[] temp = line.Split(' ', ':', ';').Where(z => !String.IsNullOrWhiteSpace(z)).ToArray();
                             string name = temp[0].Substring(4); // disease
                             int index = getIndex(name);
                             //x is disease and if it couldn't find that it will give an exception 
@@ -510,48 +515,48 @@ namespace DS_Final_Project
                             }
                         }
                         stopwatch.Stop();
-                        tempTime = stopwatch.Elapsed.TotalSeconds;
-                        time += tempTime;
-                        Console.WriteLine(" - Allergies file elapsed time : " + tempTime + " seconds");
+                        auxTime = stopwatch.Elapsed.TotalSeconds;
+                        time += auxTime;
+                        Console.WriteLine("Allergies file time : " + auxTime + " s");
                         stopwatch.Reset(); //if we don't stop it, it will continue ...
                         break;
 
                     case files.diseases:
                         stopwatch.Start();
-                        while ((ln = file.ReadLine()) != null)
+                        while ((line = file.ReadLine()) != null)
                         {
-                            string name = ln.Substring(4); //remove Dis_
+                            string name = line.Substring(4); //remove Dis_
                             int index = getIndex(name);
                             Diseases[index].Add(new Disease(name));
                         }
                         stopwatch.Stop();
-                        tempTime = stopwatch.Elapsed.TotalMilliseconds / 1000;
-                        time += tempTime;
-                        Console.WriteLine(" - Diseases file elapsed time : " + tempTime + " seconds");
+                        auxTime = stopwatch.Elapsed.TotalMilliseconds / 1000;
+                        time += auxTime;
+                        Console.WriteLine("Diseases file time : " + auxTime + " s");
                         stopwatch.Reset();
                         break;
 
                     case files.drugs:
                         stopwatch.Start();
-                        while ((ln = file.ReadLine()) != null)
+                        while ((line = file.ReadLine()) != null)
                         {
-                            string[] temp = ln.Split(' ', ':');
+                            string[] temp = line.Split(' ', ':');
                             string name = temp[0].Substring(5); //remove Drug_
                             int index = getIndex(name);
                             Drugs[index].Add(new Drug(name, float.Parse(temp[3])));
                         }
                         stopwatch.Stop();
-                        tempTime = stopwatch.Elapsed.TotalSeconds;
-                        time += tempTime;
-                        Console.WriteLine(" - Drugs file elapsed time : " + tempTime + " seconds");
+                        auxTime = stopwatch.Elapsed.TotalSeconds;
+                        time += auxTime;
+                        Console.WriteLine("Drugs file time : " + auxTime + " s");
                         stopwatch.Reset();
                         break;
 
                     case files.effects:
                         stopwatch.Start();
-                        while ((ln = file.ReadLine()) != null)
+                        while ((line = file.ReadLine()) != null)
                         {
-                            var temp = ln.Split(' ', ':', ';').Where(z => !String.IsNullOrWhiteSpace(z)).ToArray();
+                            var temp = line.Split(' ', ':', ';').Where(z => !String.IsNullOrWhiteSpace(z)).ToArray();
                             string name = temp[0].Substring(5); //remove Drug_
                             int index = getIndex(name);
                             var x = getDrug(ref Drugs[index], name);
@@ -563,9 +568,9 @@ namespace DS_Final_Project
                             }
                         }
                         stopwatch.Stop();
-                        tempTime = stopwatch.Elapsed.TotalSeconds;
-                        time += tempTime;
-                        Console.WriteLine(" - Effects file elapsed time : " + tempTime + " seconds");
+                        auxTime = stopwatch.Elapsed.TotalSeconds;
+                        time += auxTime;
+                        Console.WriteLine("Effects file time : " + auxTime + " s");
                         stopwatch.Reset();
                         break;
                 }
@@ -597,7 +602,7 @@ namespace DS_Final_Project
             {
                 if (count == 0)
                     break;
-                int selectedIndex = rnd.Next(0, hashSize);
+                int selectedIndex = rnd.Next(0, size);
                 int n = Drugs[selectedIndex].Count;
                 if (n == 0)
                     continue;
@@ -611,17 +616,17 @@ namespace DS_Final_Project
                 }
             }
             Drugs[index].Add(temp);
-            UI.PrintLine(2);
-            UI.WriteSubTitle("Details :");
+            cnsl.PrintLine(2);
+            cnsl.WriteSubTitle("Details :");
             Console.WriteLine("Name : {0}\nPrice : {1}", name, price);
             Console.WriteLine("\nEffects :");
             foreach (var x in temp.Effects)
                 Console.WriteLine(" " + x);
-            using (StreamWriter sw = File.AppendText(dataPath + effects))
+            using (StreamWriter sw = File.AppendText(pathURL + effects))
                 sw.WriteLine(temp.ToString());
-            using (StreamWriter sw = File.AppendText(dataPath + drugs))
+            using (StreamWriter sw = File.AppendText(pathURL + drugs))
                 sw.WriteLine(String.Format("Drug_{0} : {1}", name, price));
-            UI.PrintLine(2);
+            cnsl.PrintLine(2);
         }
         static void addDisease(string name)
         {
@@ -638,7 +643,7 @@ namespace DS_Final_Project
             {
                 if (count == 0)
                     break;
-                int selectedIndex = rnd.Next(0, hashSize);
+                int selectedIndex = rnd.Next(0, size);
                 int n = Drugs[selectedIndex].Count;
                 if (n == 0)
                     continue;
@@ -652,17 +657,17 @@ namespace DS_Final_Project
                 }
             }
             Diseases[index].Add(temp);
-            UI.PrintLine(2);
-            UI.WriteSubTitle("Details :");
+            cnsl.PrintLine(2);
+            cnsl.WriteSubTitle("Details :");
             Console.WriteLine("Name : {0}", name);
             Console.WriteLine("\nAllergies :");
             foreach (var x in temp.Effects)
                 Console.WriteLine(" " + x);
-            using (StreamWriter sw = File.AppendText(dataPath + alergies))
+            using (StreamWriter sw = File.AppendText(pathURL + alergies))
                 sw.WriteLine(temp.ToString());
-            using (StreamWriter sw = File.AppendText(dataPath + diseases))
+            using (StreamWriter sw = File.AppendText(pathURL + diseases))
                 sw.WriteLine(String.Format("Dis_{0}", name));
-            UI.PrintLine(2);
+            cnsl.PrintLine(2);
         }
         static void Main(string[] args)
         {
@@ -678,36 +683,34 @@ namespace DS_Final_Project
                 {
                     switch (command)
                     {
-                        case commands.Start_reading:
+                        case commands.startToRead:
                             if (isRead)
-                                throw new Exception("You have already read files !");
+                                throw new Exception("you've already read files!");
                             isRead = true;
                             Console.Clear();
-                            UI.WriteTitle("Reading files and creating datasets !");
-                            readFiles(dataPath + diseases, files.diseases);
-                            readFiles(dataPath + drugs, files.drugs);
-                            readFiles(dataPath + effects, files.effects);
-                            readFiles(dataPath + alergies, files.alergies);
-                            UI.PrintLine();
-                            UI.WriteLog(" -> total time = " + time + " seconds! <- ");
-                            UI.PrintLine();
+                            cnsl.WriteTitle("Reading files and creating datasets!");
+                            readFiles(pathURL + diseases, files.diseases);
+                            readFiles(pathURL + drugs, files.drugs);
+                            readFiles(pathURL + effects, files.effects);
+                            readFiles(pathURL + alergies, files.alergies);
+                            cnsl.PrintLine();
+                            cnsl.WriteLog("total time = " + time + " s");
+                            cnsl.PrintLine();
                             wait();
                             break;
 
-                        case commands.Check_if_there_is_a_drug_interactions_in_a_drug_prescription:
+                        case commands.checkDrugsIntraction:
                             Console.Clear();
                             List<Drug> drugPrescription = new List<Drug>();
                             List<string> interactions = new List<string>();
-                            UI.WriteTitle("enter drug name or end/finish/exit or enter key to see result !");
+                            cnsl.WriteTitle("Enter {Drug's Name} or End or Enter key to see the result!");
                             while (true)
                             {
                                 notFoundError();
-                                Console.Write(" -> Drug name : ");
+                                Console.Write("Drug Name : ");
                                 string inputDrug = Console.ReadLine();
-
                                 if (inputDrug.ToLower() == "exit" || inputDrug.ToLower() == "finish" || inputDrug.ToLower() == "end" || String.IsNullOrEmpty(inputDrug))
                                     break;
-
                                 sw.Start();
                                 index = getIndex(inputDrug);
                                 try
@@ -716,7 +719,7 @@ namespace DS_Final_Project
                                 }
                                 catch
                                 {
-                                    error += "No such a Drug!";
+                                    error += "There's no drug with this name!";
                                 }
                                 sw.Stop();
                                 exeTime += sw.Elapsed.TotalSeconds;
@@ -730,33 +733,33 @@ namespace DS_Final_Project
                                     if (effects.Contains(drugPrescription[j].Name))
                                         interactions.Add(String.Format("{0} & {1}", drugPrescription[i].Name, drugPrescription[j].Name));
                             }
-                            UI.PrintLine(2);
-                            UI.WriteSubTitle("Interactions :");
+                            cnsl.PrintLine(2);
+                            cnsl.WriteSubTitle("Interactions :");
                             if (interactions.Count == 0)
-                                Console.WriteLine("NO interactions!");
+                                Console.WriteLine("no interactions!");
                             else
                                 foreach (var x in interactions)
                                     Console.WriteLine(x);
                             sw.Stop();
                             exeTime += sw.Elapsed.TotalSeconds;
-                            UI.PrintLine(2);
-                            Console.WriteLine("Elapsed time : " + exeTime + " seconds");
-                            UI.PrintLine(2);
+                            cnsl.PrintLine(2);
+                            Console.WriteLine("Time : " + exeTime + " s");
+                            cnsl.PrintLine(2);
                             exeTime = 0;
                             sw.Reset();
                             wait();
                             break;
 
-                        case commands.Check_if_there_is_a_medical_allergy_in_clients_drug_prescription:
+                        case commands.checkAllergyInDrugs:
                             Console.Clear();
                             List<Disease> clientDiseases = new List<Disease>();
                             List<Drug> clientDrugPrescription = new List<Drug>();
                             List<String> mediacalAllergy = new List<string>();
-                            UI.WriteTitle("enter disease name or end/finish/exit or enter key to continue !");
+                            cnsl.WriteTitle("Enter {Disease's Name} or End or Enter key to see the result!");
                             while (true)
                             {
                                 notFoundError();
-                                Console.Write(" -> Disease name : ");
+                                Console.Write("Disease Name : ");
                                 string inputDisease = Console.ReadLine();
 
                                 if (inputDisease.ToLower() == "exit" || inputDisease.ToLower() == "finish" || inputDisease.ToLower() == "end" || String.IsNullOrEmpty(inputDisease))
@@ -770,17 +773,17 @@ namespace DS_Final_Project
                                 }
                                 catch
                                 {
-                                    error += "No such a Disease!";
+                                    error += "there's no disease with this name!";
                                 }
                                 sw.Stop();
                                 exeTime += sw.Elapsed.TotalSeconds;
                             }
 
-                            UI.WriteTitle("enter drug name or end/finish/exit or enter key to see result !");
+                            cnsl.WriteTitle("Enter {Drug's Name} or End or Enter key to see the result!");
                             while (true)
                             {
                                 notFoundError();
-                                Console.Write(" -> Drug name : ");
+                                Console.Write("Drug Name : ");
                                 string inputDrug = Console.ReadLine();
 
                                 if (inputDrug.ToLower() == "exit" || inputDrug.ToLower() == "finish" || inputDrug.ToLower() == "end" || String.IsNullOrEmpty(inputDrug))
@@ -794,7 +797,7 @@ namespace DS_Final_Project
                                 }
                                 catch
                                 {
-                                    error += "No such a Drug!";
+                                    error += "there's no drug with this name!";
                                 }
                                 sw.Stop();
                                 exeTime += sw.Elapsed.TotalSeconds;
@@ -807,31 +810,31 @@ namespace DS_Final_Project
                                     if (temp[0] && !temp[1])
                                         mediacalAllergy.Add(string.Format("Disease : {0} & Drug : {1}", disease.Name, drug.Name));
                                 }
-                            UI.PrintLine(2);
-                            UI.WriteSubTitle("Medical Allergy :");
+                            cnsl.PrintLine(2);
+                            cnsl.WriteSubTitle("allergy :");
                             if (mediacalAllergy.Count == 0)
-                                Console.WriteLine("NO allergies!");
+                                Console.WriteLine("no allergies!");
                             else
                                 foreach (var x in mediacalAllergy)
                                     Console.WriteLine(x);
                             sw.Stop();
                             exeTime += sw.Elapsed.TotalSeconds;
-                            UI.PrintLine(2);
-                            Console.WriteLine("Elapsed time : " + exeTime + " seconds");
-                            UI.PrintLine(2);
+                            cnsl.PrintLine(2);
+                            Console.WriteLine("Time : " + exeTime + " s");
+                            cnsl.PrintLine(2);
                             exeTime = 0;
                             sw.Reset();
                             wait();
                             break;
 
-                        case commands.Calculate_total_price:
+                        case commands.TotalPrice:
                             Console.Clear();
-                            UI.WriteTitle("enter drug name or end/finish/exit or enter key to see result !");
+                            cnsl.WriteTitle("Enter {Drug's Name} or End or Enter key to see the result!");
                             float price = 0;
                             while (true)
                             {
                                 printError();
-                                Console.Write(" -> Drug name : ");
+                                Console.Write("Drug Name : ");
                                 string inputDrug = Console.ReadLine();
 
                                 if (inputDrug.ToLower() == "exit" || inputDrug.ToLower() == "finish" || inputDrug.ToLower() == "end" || String.IsNullOrEmpty(inputDrug))
@@ -845,36 +848,36 @@ namespace DS_Final_Project
                                 }
                                 catch
                                 {
-                                    error += "No such a Drug!";
+                                    error += "there's no drug with this name!";
                                 }
                                 sw.Stop();
                                 exeTime += sw.Elapsed.TotalSeconds;
                             }
-                            UI.PrintLine();
-                            UI.WriteSubTitle("Total price : " + price);
-                            UI.PrintLine(2);
-                            Console.WriteLine("Elapsed time : " + exeTime + " seconds");
-                            UI.PrintLine(2);
+                            cnsl.PrintLine();
+                            cnsl.WriteSubTitle("Total Price : " + price);
+                            cnsl.PrintLine(2);
+                            Console.WriteLine("Time : " + exeTime + " s");
+                            cnsl.PrintLine(2);
                             exeTime = 0;
                             sw.Reset();
                             wait();
                             break;
 
-                        case commands.Change_price_of_drugs:
+                        case commands.changePriceOfDrug:
                             Console.Clear();
-                            UI.WriteTitle("Change the price of drugs");
+                            cnsl.WriteTitle("Change the price of drugs");
                             try
                             {
-                                Console.Write(" -> Enter amount in percentage (e.g. 50.4) : ");
+                                Console.Write("Enter Amount in percentage (for example 50.4) : ");
                                 float percent = int.Parse(Console.ReadLine());
                                 if (percent != 0)
                                 {
                                     sw.Start();
                                     float ratio = 1.0f + (float)percent / 100;
-                                    File.WriteAllText(dataPath + drugs, String.Empty);
-                                    using (StreamWriter file = new StreamWriter(dataPath + drugs))
+                                    File.WriteAllText(pathURL + drugs, String.Empty);
+                                    using (StreamWriter file = new StreamWriter(pathURL + drugs))
                                     {
-                                        for (int list = 0; list < hashSize; list++)
+                                        for (int list = 0; list < size; list++)
                                             for (int drug = 0; drug < Drugs[list].Count; drug++)
                                             {
                                                 Drugs[list][drug].Price = ratio * Drugs[list][drug].Price;
@@ -882,20 +885,20 @@ namespace DS_Final_Project
                                             }
                                     }
                                     sw.Stop();
-                                    UI.PrintLine(2);
-                                    Console.WriteLine("Elapsed time : " + sw.Elapsed.TotalSeconds + " seconds");
-                                    UI.PrintLine(2);
+                                    cnsl.PrintLine(2);
+                                    Console.WriteLine("Time : " + sw.Elapsed.TotalSeconds + " s");
+                                    cnsl.PrintLine(2);
                                     sw.Reset();
                                     wait();
                                 }
                             }
                             catch
                             {
-                                throw new Exception("Check input format (not a number) !");
+                                throw new Exception("Enter your input in correct format!");
                             }
                             break;
 
-                        case commands.Add_or_delete_drug_and_disease:
+                        case commands.AddOrDeleteADrugAndDisease:
                             while (true)
                             {
                                 var CD = pagEnum<CDcommand>();
@@ -904,7 +907,7 @@ namespace DS_Final_Project
                                 var typeCD = pagEnum<choices>("Choose one to " + CD.ToString().ToLower() + " :");
                                 if (typeCD != choices.Back)
                                 {
-                                    Console.Write(" -> Enter name of {0} : ", typeCD.ToString());
+                                    Console.Write("Enter name of {0} : ", typeCD.ToString());
                                     //get a name
                                     string inputName = Console.ReadLine();
 
@@ -921,7 +924,7 @@ namespace DS_Final_Project
                                                     break;
 
                                                 case choices.Drug:
-                                                    Console.Write(" -> Enter price of drug : ", typeCD.ToString());
+                                                    Console.Write("Enter price of drug : ", typeCD.ToString());
                                                     int inputPrice = 0;
                                                     try
                                                     {
@@ -929,7 +932,7 @@ namespace DS_Final_Project
                                                     }
                                                     catch
                                                     {
-                                                        throw new Exception("Enter correct number for price !");
+                                                        throw new Exception("Pls enter the price in the correct format!");
                                                     }
                                                     sw.Start();
                                                     addDrug(inputName, inputPrice);
@@ -946,11 +949,11 @@ namespace DS_Final_Project
                                                     sw.Start();
                                                     index = getIndex(inputName);
                                                     removeDisease(ref Diseases[index], inputName);
-                                                    File.WriteAllText(dataPath + diseases, String.Empty);
-                                                    File.WriteAllText(dataPath + alergies, String.Empty);
-                                                    using (StreamWriter diseasesFile = new StreamWriter(dataPath + diseases))
+                                                    File.WriteAllText(pathURL + diseases, String.Empty);
+                                                    File.WriteAllText(pathURL + alergies, String.Empty);
+                                                    using (StreamWriter diseasesFile = new StreamWriter(pathURL + diseases))
                                                     {
-                                                        using (StreamWriter alergiesFile = new StreamWriter(dataPath + alergies))
+                                                        using (StreamWriter alergiesFile = new StreamWriter(pathURL + alergies))
                                                         {
                                                             foreach (var list in Diseases)
                                                                 foreach (var disease in list)
@@ -962,7 +965,7 @@ namespace DS_Final_Project
                                                         }
                                                     }
                                                     sw.Stop();
-                                                    Console.WriteLine("delete " + inputName + " elapsed time : " + sw.Elapsed.TotalSeconds + " seconds");
+                                                    Console.WriteLine("Delete " + inputName + " time : " + sw.Elapsed.TotalSeconds + " s");
                                                     sw.Reset();
                                                     break;
 
@@ -970,12 +973,12 @@ namespace DS_Final_Project
                                                     sw.Start();
                                                     index = getIndex(inputName);
                                                     removetDrug(ref Drugs[index], inputName);
-                                                    File.WriteAllText(dataPath + drugs, String.Empty);
-                                                    File.WriteAllText(dataPath + effects, String.Empty);
-                                                    File.WriteAllText(dataPath + alergies, String.Empty);
-                                                    using (StreamWriter drugsFile = new StreamWriter(dataPath + drugs))
+                                                    File.WriteAllText(pathURL + drugs, String.Empty);
+                                                    File.WriteAllText(pathURL + effects, String.Empty);
+                                                    File.WriteAllText(pathURL + alergies, String.Empty);
+                                                    using (StreamWriter drugsFile = new StreamWriter(pathURL + drugs))
                                                     {
-                                                        using (StreamWriter effectsFile = new StreamWriter(dataPath + effects))
+                                                        using (StreamWriter effectsFile = new StreamWriter(pathURL + effects))
                                                         {
                                                             foreach (var list in Drugs)
                                                                 foreach (var drug in list)
@@ -986,7 +989,7 @@ namespace DS_Final_Project
                                                                 }
                                                         }
                                                     }
-                                                    using (StreamWriter alergiesFile = new StreamWriter(dataPath + alergies))
+                                                    using (StreamWriter alergiesFile = new StreamWriter(pathURL + alergies))
                                                     {
                                                         foreach (var list in Diseases)
                                                             foreach (var disease in list)
@@ -994,9 +997,9 @@ namespace DS_Final_Project
                                                                     alergiesFile.WriteLine(disease.ToString());
                                                     }
                                                     sw.Stop();
-                                                    UI.PrintLine(2);
-                                                    Console.WriteLine("delete " + inputName + " elapsed time : " + sw.Elapsed.TotalSeconds + " seconds");
-                                                    UI.PrintLine(2);
+                                                    cnsl.PrintLine(2);
+                                                    Console.WriteLine("Delete " + inputName + " time : " + sw.Elapsed.TotalSeconds + " s");
+                                                    cnsl.PrintLine(2);
                                                     sw.Reset();
                                                     break;
                                             }
@@ -1008,36 +1011,36 @@ namespace DS_Final_Project
                             }
                             break;
 
-                        case commands.Search_in_drugs_or_diseases:
-                            var typeS = pagEnum<choices>("Search in ?");
+                        case commands.searchInDrugsOrDiseases:
+                            var typeS = pagEnum<choices>("Search In ...");
                             string name = null;
                             if (typeS != choices.Back)
                             {
-                                Console.Write(" -> Enter name of {0} : ", typeS.ToString());
+                                Console.Write("Enter name of {0} : ", typeS.ToString());
                                 name = Console.ReadLine();
                                 index = getIndex(name);
                                 Console.Clear();
-                                UI.WriteTitle(name);
+                                cnsl.WriteTitle(name);
                             }
                             switch (typeS)
                             {
                                 case choices.Disease:
                                     var disease = getDisease(ref Diseases[index], name);
                                     sw.Start();
-                                    var positives = disease.Effects.Where(x => x.IsGood);
-                                    var negatives = disease.Effects.Where(x => !x.IsGood);
+                                    var positives = disease.Effects.Where(x => x.IsPositiveFunc);
+                                    var negatives = disease.Effects.Where(x => !x.IsPositiveFunc);
                                     Console.WriteLine();
-                                    UI.WriteSubTitle("POSITIVES :");
+                                    cnsl.WriteSubTitle("POS :");
                                     foreach (var x in positives)
                                         Console.WriteLine(x);
                                     Console.WriteLine();
-                                    UI.WriteSubTitle("NEGATIVES :");
+                                    cnsl.WriteSubTitle("NEG :");
                                     foreach (var x in negatives)
                                         Console.WriteLine(x);
                                     sw.Stop();
-                                    UI.PrintLine(2);
-                                    UI.WriteLog("Elapsed time : " + sw.Elapsed.TotalSeconds + " seconds");
-                                    UI.PrintLine(2);
+                                    cnsl.PrintLine(2);
+                                    cnsl.WriteLog("Time : " + sw.Elapsed.TotalSeconds + " s");
+                                    cnsl.PrintLine(2);
                                     sw.Reset();
                                     wait();
                                     break;
@@ -1047,9 +1050,9 @@ namespace DS_Final_Project
                                     double time = 0;
                                     sw.Start();
                                     Console.WriteLine();
-                                    UI.WriteSubTitle("On Drugs :");
+                                    cnsl.WriteSubTitle("On Drugs :");
                                     if (drug.Effects.Count == 0)
-                                        Console.WriteLine("No effect on drugs!");
+                                        Console.WriteLine("no effect on this drugs!");
                                     else
                                         foreach (var eff in drug.Effects)
                                             Console.WriteLine(eff);
@@ -1058,29 +1061,29 @@ namespace DS_Final_Project
                                     sw.Reset();
                                     sw.Start();
                                     Console.WriteLine();
-                                    UI.WriteSubTitle("On Diseases :");
+                                    cnsl.WriteSubTitle("On Diseases :");
                                     Console.WriteLine();
                                     var effectsOnDiseases = effectsOfDrugOnDiseases(name);
-                                    Console.WriteLine(" -> positive :");
+                                    Console.WriteLine(" positive :");
                                     if (effectsOnDiseases["positive"].Count == 0)
-                                        Console.WriteLine("No positive effect on diseases!");
+                                        Console.WriteLine("No positive effect on this diseases!");
                                     else
                                         foreach (var x in effectsOnDiseases["positive"])
                                             Console.WriteLine("Disease : {0}", x);
                                     Console.WriteLine();
-                                    Console.WriteLine(" -> negative :");
+                                    Console.WriteLine(" negative :");
                                     if (effectsOnDiseases["negative"].Count == 0)
                                         Console.WriteLine("No negative effect on diseases!");
                                     else
                                         foreach (var x in effectsOnDiseases["negative"])
                                             Console.WriteLine("Disease : {0}", x);
                                     sw.Stop();
-                                    UI.PrintLine(2);
-                                    Console.WriteLine("Drug elapsed time : " + time + " seconds");
-                                    Console.WriteLine("Disease elapsed time : " + sw.Elapsed.TotalSeconds + " seconds");
-                                    UI.PrintLine();
-                                    UI.WriteLog("Total elapsed time : " + (sw.Elapsed.TotalSeconds + time) + " seconds");
-                                    UI.PrintLine(2);
+                                    cnsl.PrintLine(2);
+                                    Console.WriteLine("Drug Time : " + time + " s");
+                                    Console.WriteLine("Disease elapsed time : " + sw.Elapsed.TotalSeconds + " s");
+                                    cnsl.PrintLine();
+                                    cnsl.WriteLog("Total Time : " + (sw.Elapsed.TotalSeconds + time) + " s");
+                                    cnsl.PrintLine(2);
                                     sw.Reset();
                                     wait();
                                     break;
@@ -1088,7 +1091,7 @@ namespace DS_Final_Project
                             break;
                         case commands.Exit:
                             Console.Clear();
-                            UI.WriteTitle("Good bye, hope to see you again !");
+                            cnsl.WriteTitle("See you again!");
                             exit = true;
                             break;
                     }
@@ -1096,7 +1099,7 @@ namespace DS_Final_Project
                 catch (Exception e)
                 {
                     if (e is FormatException)
-                        error += " * Enter correct Number !! ";
+                        error += "Please enter correct Number!";
                     else
                         error += e.Message;
                 }
