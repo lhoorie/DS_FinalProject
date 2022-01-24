@@ -335,7 +335,7 @@ namespace DS_Final_Project
             changePriceOfDrug,
             AddOrDeleteADrugAndDisease,
             searchInDrugsOrDiseases,
-            Exit = 9
+            Exit = 8
         }
 
         enum choices
@@ -401,10 +401,10 @@ namespace DS_Final_Project
                 if (temp.ToString() == "Back" || temp.ToString() == "Exit")
                 {
                     Console.WriteLine();
-                    counter = 9;
+                    counter = 8;
                 }
 
-                cnsl.WriteSubTitle(String.Format(" {0} - {1}", counter, temp));
+                cnsl.WriteSubTitle(String.Format(" ({0}){1}", counter, temp));
                 counter++;
             }
 
